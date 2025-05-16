@@ -79,6 +79,8 @@ static void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
   }
 }
 
+tmpls tmpl_paths;
+
 int main() {
   struct mg_mgr mgr;       // Event manager
   mg_log_set(MG_LL_DEBUG); // Set log level
@@ -90,6 +92,46 @@ int main() {
   // //   return EXIT_FAILURE;
   // // }
   printf("Hello Mongoose!\n");
+
+
+  char *indx_end = "/index.tmpl";
+  char *strt_end = "/start_timer.tmpl";
+  char *stop_end = "/stop_timer.tmpl";
+  char *edit_end = "/edit_timer.tmpl";
+
+  char *base_path = getenv("TMPL_PATH");
+  if (!base_path) base_path = "templates";
+  int base_len = strlen(base_path);
+
+  int indx_len = base_len + strlen(indx_end)+1;
+  tmpl_paths.index = malloc(indx_len);
+  if (!tmpl_paths.index) {
+    t_log(ERROR, __func__, "Malloc: could not allocate enough memory.");
+    return EXIT_FAILURE;
+  }
+  int strt_len = base_len + strlen(strt_end)+1;
+  tmpl_paths.start = malloc(strt_len);
+  if (!tmpl_paths.start) {
+    t_log(ERROR, __func__, "Malloc: could not allocate enough memory.");
+    return EXIT_FAILURE;
+  }
+  int stop_len = base_len + strlen(stop_end)+1;
+  tmpl_paths.stop = malloc(stop_len);
+  if (!tmpl_paths.stop) {
+    t_log(ERROR, __func__, "Malloc: could not allocate enough memory.");
+    return EXIT_FAILURE;
+  }
+  int edit_len = base_len + strlen(edit_end)+1;
+  tmpl_paths.edit = malloc(edit_len);
+  if (!tmpl_paths.edit) {
+    t_log(ERROR, __func__, "Malloc: could not allocate enough memory.");
+    return EXIT_FAILURE;
+  }
+
+  snprintf(tmpl_paths.index, indx_len, "%s%s", base_path, indx_end);
+  snprintf(tmpl_paths.start, strt_len, "%s%s", base_path, strt_end);
+  snprintf(tmpl_paths.stop, stop_len, "%s%s", base_path, stop_end);
+  snprintf(tmpl_paths.edit, edit_len, "%s%s", base_path, edit_end);
 
   // Setup Mongoose HTTP listener
   mg_http_listen(&mgr, "http://localhost:8000", ev_handler, NULL);

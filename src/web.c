@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern tmpls tmpl_paths;
+
 void create_index_html(char *is_running, char *name, char *client,
                        char *project, char *description,
                        char *current_duration) {
@@ -14,7 +16,7 @@ void create_index_html(char *is_running, char *name, char *client,
                            description, "duration", current_duration, NULL);
 
   FILE *index_html_file = fopen("index.html", "w+");
-  int err = TMPL_write("templates/index.tmpl", NULL, NULL, tmpl_vars,
+  int err = TMPL_write(tmpl_paths.index, NULL, NULL, tmpl_vars,
                        index_html_file, stderr);
   TMPL_free_varlist(tmpl_vars);
   fclose(index_html_file);
@@ -27,7 +29,7 @@ void create_index_html(char *is_running, char *name, char *client,
 
 void create_start_timer_html() {
   FILE *start_html = fopen("start_timer.html", "w+");
-  int err = TMPL_write("templates/start_timer.tmpl", NULL, NULL, NULL,
+  int err = TMPL_write(tmpl_paths.start, NULL, NULL, NULL,
                        start_html, stderr);
   fclose(start_html);
 
@@ -47,7 +49,7 @@ void create_stop_timer_html(char *name, char *client, char *project,
                    "end_time", end_time, "duration", final_duration, NULL);
 
   FILE *stop_html = fopen("stop_timer.html", "w+");
-  int err = TMPL_write("templates/stop_timer.tmpl", NULL, NULL, tmpl_vars,
+  int err = TMPL_write(tmpl_paths.stop, NULL, NULL, tmpl_vars,
                        stop_html, stderr);
   fclose(stop_html);
 
@@ -65,7 +67,7 @@ void create_edit_html(char *name, char *client, char *project,
                            start_time, "end_time", end_time, NULL);
 
   FILE *edit_html = fopen("edit_timer.html", "w+");
-  int err = TMPL_write("templates/edit_timer.tmpl", NULL, NULL, tmpl_vars,
+  int err = TMPL_write(tmpl_paths.edit, NULL, NULL, tmpl_vars,
                        edit_html, stderr);
   fclose(edit_html);
 
